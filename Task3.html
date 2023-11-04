@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .container {
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .add-task {
+    margin-bottom: 20px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .completed {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+  
+  button {
+    padding: 8px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  </style>
+  <title>ToDo App</title>
+</head>
+<body>
+  <div class="container">
+    <h1>ToDo App</h1>
+    <div class="add-task">
+      <input type="text" id="taskInput" placeholder="Add a new task">
+      <button onclick="addTask()">Add</button>
+    </div>
+    <div class="tasks">
+      <h2>Pending Tasks</h2>
+      <ul id="pendingTasks"></ul>
+    </div>
+    <div class="tasks">
+      <h2>Completed Tasks</h2>
+      <ul id="completedTasks"></ul>
+    </div>
+  </div>
+
+ <script>
+    let tasks = [];
+
+function addTask() {
+  const taskInput = document.getElementById('taskInput');
+  const taskText = taskInput.value.trim();
+
+  if (taskText !== '') {
+    const task = {
+      text: taskText,
+      completed: false,
+      date: new Date().toLocaleString(),
+    };
+
+    tasks.push(task);
+    updateLists();
+    taskInput.value = '';
+  }
+}
+
+function completeTask(index) {
+  tasks[index].completed = !tasks[index].completed;
+  updateLists();
+}
+
+function deleteTask(index) {
+  tasks.splice(index, 1);
+  updateLists();
+}
+
+function updateLists() {
+  const pendingTasksList = document.getElementById('pendingTasks');
+  const completedTasksList = document.getElementById('completedTasks');
+
+  pendingTasksList.innerHTML = '';
+  completedTasksList.innerHTML = '';
+
+  tasks.forEach((task, index) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span class="${task.completed ? 'completed' : ''}">${task.text}</span>
+      <span>${task.date}</span>
+      <button onclick="completeTask(${index})">${task.completed ? 'Undo' : 'Complete'}</button>
+      <button onclick="deleteTask(${index})">Delete</button>
+    `;
+
+    if (task.completed) {
+      completedTasksList.appendChild(li);
+    } else {
+      pendingTasksList.appendChild(li);
+    }
+  });
+}
+
+ </script>
+</body>
+</html>
